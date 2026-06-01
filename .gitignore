@@ -1,0 +1,14 @@
+# Ignore uploaded files
+uploads/listings/*
+!uploads/listings/.gitkeep
+
+# Ignore test files
+test.php
+genhash.php
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore config with passwords (optional - keep for submission)
+# config/db.php
