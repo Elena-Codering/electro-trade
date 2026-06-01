@@ -1,0 +1,58 @@
+version: "3.9"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php_web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASS: ${MYSQL_PASSWORD}
+    depends_on:
+      - db
+    networks:
+      - appnet
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4
+    container_name: mysql_db
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    command:
+      - --general-log=0
+      - --slow-query-log=0
+      - --sql-mode=STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ZERO_DATE,NO_ZERO_IN_DATE,NO_ENGINE_SUBSTITUTION
+    networks:
+      - appnet
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+networks:
+  appnet:
+    driver: bridge
+
+volumes:
+  db_data:
