@@ -12,3 +12,4 @@ Thumbs.db
 
 # Ignore config with passwords (optional - keep for submission)
 # config/db.php
+.env
