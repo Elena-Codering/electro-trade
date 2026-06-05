@@ -1,0 +1,2 @@
+# Force LF for shell scripts so CRLF on Windows doesn't break Docker entrypoints
+*.sh text eol=lf
