@@ -152,7 +152,7 @@ $provinces = ['Gauteng','Western Cape','KwaZulu-Natal','Eastern Cape',
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Listing – Electro Trade</title>
-  <link href="../assets/css/style.css" rel="stylesheet">
+  <link href="../assets/css/style.css?v=20260605" rel="stylesheet">
   <style>
     .form-card {
       background: var(--white);
@@ -286,7 +286,7 @@ $provinces = ['Gauteng','Western Cape','KwaZulu-Natal','Eastern Cape',
     <nav class="sidebar-nav">
       <a href="dashboard.php">🏠 Dashboard</a>
       <a href="add-listing.php">➕ Add Listing</a>
-      <a href="../index.php">🌐 Browse</a>
+      <a href="../index.php">🌐 View Store</a>
       <a href="../auth/logout.php" style="color:rgb(255, 255, 255);">🚪 Logout</a>
     </nav>
   </aside>

@@ -49,6 +49,15 @@ a:hover {
   text-decoration: underline;
 }
 
+.navbar-brand:hover,
+.navbar-brand:focus,
+.navbar-brand:visited,
+.nav-links a:hover,
+.nav-links a:focus {
+  color: var(--white) !important;
+  text-decoration: none !important;
+}
+
 img { max-width: 100%; display: block; }
 
 ul { list-style: none; }
@@ -170,7 +179,8 @@ h6 { font-size: .9rem;  font-weight: 600; }
   flex-wrap: wrap;
 }
 
-.nav-links a {
+.nav-links a,
+.nav-links .nav-link {
   color: rgba(255,255,255,.85);
   text-decoration: none;
   font-size: .92rem;
@@ -426,10 +436,16 @@ textarea.form-control {
   width: 100%;
   height: 200px;
   object-fit: cover;
-  transition: transform .35s ease;
+  object-position: center;
+  display: block;
+  border-radius: var(--radius) var(--radius) 0 0;
+  transition: transform .35s ease, filter .25s ease;
 }
 
-.listing-card:hover img { transform: scale(1.04); }
+.listing-card:hover img {
+  transform: scale(1.04);
+  filter: saturate(1.02);
+}
 
 .listing-card .card-body {
   padding: 1rem;
@@ -629,6 +645,13 @@ textarea.form-control {
   display: block;
 }
 
+.sidebar-brand:hover,
+.sidebar-brand:focus,
+.sidebar-brand:visited {
+  color: var(--white) !important;
+  text-decoration: none;
+}
+
 .sidebar-nav a {
   display: flex;
   align-items: center;
@@ -643,10 +666,20 @@ textarea.form-control {
 }
 
 .sidebar-nav a:hover,
+.sidebar-nav a:focus,
 .sidebar-nav a.active {
   background: rgba(255,255,255,.15);
-  color: var(--white);
+  color: var(--white) !important;
   text-decoration: none;
+}
+
+.sidebar-nav a:hover i,
+.sidebar-nav a:focus i,
+.sidebar-nav a.active i,
+.sidebar-nav a:hover span,
+.sidebar-nav a:focus span,
+.sidebar-nav a.active span {
+  color: var(--white) !important;
 }
 
 .dashboard-content {
@@ -660,7 +693,7 @@ textarea.form-control {
 ═══════════════════════════════════════ */
 .stat-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.25rem;
   margin-bottom: 2rem;
 }
@@ -673,6 +706,12 @@ textarea.form-control {
   display: flex;
   align-items: center;
   gap: 1rem;
+  min-width: 0;
+}
+
+.stat-card > div:last-child {
+  min-width: 0;
+  flex: 1;
 }
 
 .stat-card .stat-icon {
@@ -687,14 +726,20 @@ textarea.form-control {
 }
 
 .stat-card .stat-value {
-  font-size: 1.6rem;
+  font-size: 1.35rem;
   font-weight: 700;
   color: var(--text);
+  line-height: 1.15;
 }
 
 .stat-card .stat-label {
   font-size: .82rem;
   color: var(--text-muted);
+}
+
+.stat-card:nth-child(5) .stat-value,
+.stat-card:nth-child(5) .stat-label {
+  white-space: normal;
 }
 
 /* ═══════════════════════════════════════
@@ -835,9 +880,35 @@ table tbody td {
     display: none;
     width: 100%;
     flex-direction: column;
-    padding-top: .5rem;
+    align-items: stretch;
+    padding: .5rem 0 0;
   }
-  .nav-links.open { display: flex; }
+  .nav-links.open {
+    display: flex;
+    background: rgba(13, 27, 43, 0.08);
+    border-radius: var(--radius-sm);
+    padding: .75rem;
+  }
+  .nav-links .navbar-nav,
+  .nav-links .navbar-nav.ms-auto {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: .5rem;
+  }
+  .nav-links .nav-item,
+  .nav-links .nav-item > * {
+    width: 100%;
+  }
+  .nav-links .nav-link,
+  .nav-links .btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+  }
 }
 
 /* ── TOAST NOTIFICATION ── */

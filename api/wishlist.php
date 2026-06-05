@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 
 // Must be logged in
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['success' => false, 'redirect' => '/electrotrade/auth/login.php']);
+    echo json_encode(['success' => false, 'redirect' => 'auth/login.php']);
     exit;
 }
 

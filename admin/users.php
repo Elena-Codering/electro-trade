@@ -129,7 +129,7 @@ $users = $stmt->fetchAll();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Management – Electro Trade Admin</title>
-  <link href="../assets/css/style.css" rel="stylesheet">
+  <link href="../assets/css/style.css?v=20260605" rel="stylesheet">
   <style>
     .role-admin     { background:#e8f0fb; color:var(--primary); }
     .role-moderator { background:#eafaf1; color:var(--success); }
@@ -215,15 +215,15 @@ $users = $stmt->fetchAll();
       <?php if (in_array($role, ['admin','support'])): ?>
         <a href="orders.php">🛒 Orders</a>
       <?php endif; ?>
-      <?php if (in_array($role, ['admin','finance'])): ?>
+<!--      <?php if (in_array($role, ['admin','finance'])): ?>
         <a href="reports.php">📊 Reports</a>
-      <?php endif; ?>
+      <?php endif; ?> -->
       <?php if ($role === 'admin'): ?>
         <a href="roles.php">🔐 Roles</a>
         <a href="settings.php">⚙️ Settings</a>
       <?php endif; ?>
       <a href="../index.php">🌐 View Site</a>
-      <a href="../auth/logout.php" style="color:rgba(255,255,255,.6);">🚪 Logout</a>
+      <a href="../auth/logout.php" style="color:rgb(255, 255, 255);">🚪 Logout</a>
     </nav>
   </aside>
 

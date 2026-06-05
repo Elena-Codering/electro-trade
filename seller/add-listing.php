@@ -78,6 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':prov'  => $province,
         ]);
 
+        $listing_id = (int)$pdo->lastInsertId();
+
         // Insert images
         if (!empty($uploadedImages)) {
             $imgStmt = $pdo->prepare('
@@ -106,7 +108,7 @@ $provinces = ['Gauteng','Western Cape','KwaZulu-Natal','Eastern Cape',
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add Listing – Electro Trade</title>
-  <link href="../assets/css/style.css" rel="stylesheet">
+  <link href="../assets/css/style.css?v=20260605" rel="stylesheet">
   <style>
     .upload-area {
       border: 2px dashed var(--border);
@@ -221,7 +223,7 @@ $provinces = ['Gauteng','Western Cape','KwaZulu-Natal','Eastern Cape',
       <a href="add-listing.php" class="active">➕ Add Listing</a>
       <a href="../index.php">🌐 View Store
       </a>
-      <a href="../auth/logout.php" style="color:rgba(255,255,255,.6);">🚪 Logout</a>
+      <a href="../auth/logout.php" style="color:rgb(255, 255, 255);">🚪 Logout</a>
     </nav>
   </aside>
 

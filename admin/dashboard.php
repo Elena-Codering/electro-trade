@@ -66,7 +66,7 @@ $flagged = $pdo->query('
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard – Electro Trade</title>
-  <link href="../assets/css/style.css" rel="stylesheet">
+  <link href="../assets/css/style.css?v=20260605" rel="stylesheet">
   <style>
     .role-admin     { background:#e8f0fb; color:var(--primary); }
     .role-moderator { background:#eafaf1; color:var(--success); }
@@ -150,9 +150,9 @@ $flagged = $pdo->query('
         <a href="orders.php">🛒 Orders</a>
       <?php endif; ?>
 
-      <?php if (in_array($role, ['admin','finance'])): ?>
+<!--      <?php if (in_array($role, ['admin','finance'])): ?>
         <a href="reports.php">📊 Reports</a>
-      <?php endif; ?>
+      <?php endif; ?>-->
 
       <?php if ($role === 'admin'): ?>
         <a href="roles.php">🔐 Roles</a>
@@ -161,7 +161,7 @@ $flagged = $pdo->query('
 
       <a href="../index.php">🌐 View Site</a>
       <a href="../auth/logout.php" 
-         style="color:rgba(255,255,255,.6); margin-top:auto;">
+         style="color:rgb(255, 255, 255); margin-top:auto;">
         🚪 Logout
       </a>
     </nav>
@@ -276,10 +276,10 @@ $flagged = $pdo->query('
           <div class="qa-icon">🛒</div>
           <div class="qa-label">View Orders</div>
         </a>
-        <a href="reports.php" class="quick-action">
+<!--        <a href="reports.php" class="quick-action">
           <div class="qa-icon">📊</div>
           <div class="qa-label">Reports</div>
-        </a>
+        </a> -->
         <a href="roles.php" class="quick-action">
           <div class="qa-icon">🔐</div>
           <div class="qa-label">Manage Roles</div>

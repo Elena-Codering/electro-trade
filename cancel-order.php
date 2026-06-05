@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cancel Order – Electro Trade</title>
-  <link href="assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/style.css?v=20260605" rel="stylesheet">
   <style>
     .cancel-wrapper {
       min-height: 80vh;
@@ -265,6 +265,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </footer>
 
-<script src="assets/js/electrotrade.js"></script>
+<script src="assets/js/electrotrade.js?v=20260605"></script>
 </body>
 </html>

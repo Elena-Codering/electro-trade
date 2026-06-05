@@ -92,7 +92,7 @@ $roleInfo = [
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Role Management – Electro Trade Admin</title>
-  <link href="../assets/css/style.css" rel="stylesheet">
+  <link href="../assets/css/style.css?v=20260605" rel="stylesheet">
   <style>
     .role-card {
       background: var(--white);
@@ -225,11 +225,11 @@ $roleInfo = [
       <a href="users.php">👥 Users</a>
       <a href="listings.php">📦 Listings</a>
       <a href="orders.php">🛒 Orders</a>
-      <a href="reports.php">📊 Reports</a>
+<!--      <a href="reports.php">📊 Reports</a> -->
       <a href="roles.php" class="active">🔐 Roles</a>
       <a href="settings.php">⚙️ Settings</a>
       <a href="../index.php">🌐 View Site</a>
-      <a href="../auth/logout.php" style="color:rgba(255,255,255,.6);">🚪 Logout</a>
+      <a href="../auth/logout.php" style="color:rgb(255, 255, 255);">🚪 Logout</a>
     </nav>
   </aside>
 
