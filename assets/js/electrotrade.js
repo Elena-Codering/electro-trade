@@ -1,7 +1,36 @@
 // Mobile nav toggle
 function toggleNav() {
   const menu = document.getElementById('navMenu');
+  const btn = document.getElementById('hamburgerBtn');
+  if (!menu) return;
   menu.classList.toggle('open');
+  if (btn) btn.setAttribute('aria-expanded', String(menu.classList.contains('open')));
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const btn = document.getElementById('hamburgerBtn');
+  const menu = document.getElementById('navMenu');
+  if (!btn || !menu) return;
+
+  btn.addEventListener('click', function (e) {
+    e.preventDefault();
+    toggleNav();
+  });
+
+  menu.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () {
+      menu.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+  });
+});
+
+function getAppBasePath() {
+  const script = document.querySelector('script[src*="electrotrade.js"]');
+  if (!script || !script.src) return '';
+
+  const scriptUrl = new URL(script.src, window.location.href);
+  return scriptUrl.pathname.replace(/\/assets\/js\/electrotrade\.js$/, '');
 }
 
 // ── WISHLIST TOGGLE ──────────────────────────────────────
@@ -27,7 +56,10 @@ document.addEventListener('click', function (e) {
   formData.append('listing_id', listingId);
   formData.append('action', isWished ? 'remove' : 'add');
 
-  fetch('/electrotrade/api/wishlist.php', {
+  const basePath = getAppBasePath();
+  const apiUrl = new URL('api/wishlist.php', window.location.origin + basePath + '/');
+
+  fetch(apiUrl.toString(), {
     method: 'POST',
     body: formData
   })
@@ -40,7 +72,7 @@ document.addEventListener('click', function (e) {
 
       // Redirect to login if not logged in
       if (res.redirect) {
-        window.location.href = res.redirect;
+        window.location.href = new URL(res.redirect, window.location.origin + basePath + '/').toString();
       }
     } else {
       // Show toast notification

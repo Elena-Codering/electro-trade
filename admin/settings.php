@@ -94,7 +94,7 @@ $provinces = ['Gauteng','Western Cape','KwaZulu-Natal','Eastern Cape',
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings – Electro Trade Admin</title>
-  <link href="../assets/css/style.css" rel="stylesheet">
+  <link href="../assets/css/style.css?v=20260605" rel="stylesheet">
   <style>
     .settings-layout {
       display: grid;
@@ -247,11 +247,11 @@ $provinces = ['Gauteng','Western Cape','KwaZulu-Natal','Eastern Cape',
       <a href="users.php">👥 Users</a>
       <a href="listings.php">📦 Listings</a>
       <a href="orders.php">🛒 Orders</a>
-      <a href="reports.php">📊 Reports</a>
+<!--      <a href="reports.php">📊 Reports</a> -->
       <a href="roles.php">🔐 Roles</a>
       <a href="settings.php" class="active">⚙️ Settings</a>
       <a href="../index.php">🌐 View Site</a>
-      <a href="../auth/logout.php" style="color:rgba(255,255,255,.6);">🚪 Logout</a>
+      <a href="../auth/logout.php" style="color:rgb(255, 255, 255);">🚪 Logout</a>
     </nav>
   </aside>
 

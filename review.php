@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$alreadyReviewed) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Leave a Review – Electro Trade</title>
-  <link href="assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/style.css?v=20260605" rel="stylesheet">
   <style>
     .review-wrapper {
       min-height: 80vh;
@@ -352,7 +352,7 @@ Would you recommend them?"></textarea>
   </div>
 </footer>
 
-<script src="assets/js/electrotrade.js"></script>
+<script src="assets/js/electrotrade.js?v=20260605"></script>
 <script>
   const ratingTexts = {
     1: '😞 Poor – Very disappointed',

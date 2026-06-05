@@ -5,28 +5,52 @@ require_once 'config/db.php';
 // Fetch categories
 $cats = $pdo->query('SELECT * FROM categories')->fetchAll();
 
-// Fetch latest active listings with primary image
-$keyword  = trim($_GET['q'] ?? '');
-$cat_id   = (int)($_GET['cat'] ?? 0);
-$sql      = 'SELECT l.*, li.image_url, 
-                    CONCAT(u.first_name," ",u.last_name) AS seller_name,
-                    ROUND(AVG(r.rating),1) AS avg_rating
+// Fetch latest active listings with a usable image
+$keyword    = trim($_GET['q'] ?? '');
+$cat_id     = (int)($_GET['cat'] ?? 0);
+$condition  = trim($_GET['condition'] ?? '');
+$sort       = $_GET['sort'] ?? 'newest';
+$sql        = 'SELECT l.*,
+                    CONCAT(u.first_name, " ", u.last_name) AS seller_name,
+                    (
+                      SELECT li.image_url
+                      FROM listing_images li
+                      WHERE li.listing_id = l.listing_id
+                      ORDER BY li.is_primary DESC, li.image_id ASC
+                      LIMIT 1
+                    ) AS image_url,
+                    (
+                      SELECT ROUND(AVG(r2.rating), 1)
+                      FROM reviews r2
+                      WHERE r2.seller_id = l.seller_id
+                    ) AS avg_rating
              FROM listings l
              JOIN users u ON l.seller_id = u.user_id
-             LEFT JOIN listing_images li ON li.listing_id = l.listing_id AND li.is_primary = 1
-             LEFT JOIN reviews r ON r.seller_id = l.seller_id
              WHERE l.status = "active"';
 
 $params = [];
 if ($keyword) {
-    $sql .= ' AND (l.title LIKE :kw OR l.description LIKE :kw)';
-    $params[':kw'] = '%' . $keyword . '%';
+    $sql .= ' AND (l.title LIKE ? OR l.description LIKE ?)';
+    $params[] = '%' . $keyword . '%';
+    $params[] = '%' . $keyword . '%';
 }
 if ($cat_id > 0) {
-    $sql .= ' AND l.category_id = :cat';
-    $params[':cat'] = $cat_id;
+    $sql .= ' AND l.category_id = ?';
+    $params[] = $cat_id;
 }
-$sql .= ' GROUP BY l.listing_id ORDER BY l.created_at DESC LIMIT 12';
+if ($condition !== '') {
+    $sql .= ' AND l.condition_type = ?';
+    $params[] = $condition;
+}
+
+if ($sort === 'price_low') {
+    $sql .= ' ORDER BY l.price ASC';
+} elseif ($sort === 'price_high') {
+    $sql .= ' ORDER BY l.price DESC';
+} else {
+    $sql .= ' ORDER BY l.created_at DESC';
+}
+$sql .= ' LIMIT 12';
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $listings = $stmt->fetchAll();
@@ -36,55 +60,31 @@ $listings = $stmt->fetchAll();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Electro Trade – Buy & Sell Anything</title>
-  <link href="assets/css/style.css" rel="stylesheet">
+  <title>Electro Trade – Buy & Sell Electronics</title>
+  <link href="assets/css/style.css?v=20260605" rel="stylesheet">
 </head>
 <body>
 
 <!-- ── NAVBAR ── -->
-<nav class="navbar navbar-expand-lg navbar">
+<nav class="navbar">
   <div class="container">
     <a class="navbar-brand" href="index.php">⚡ Electro Trade</a>
-	<button class="hamburger" onclick="toggleNav()" id="hamburgerBtn">☰</button>
-	<div class="nav-links" id="navMenu">
-      <ul class="navbar-nav ms-auto align-items-center gap-2">
-        <?php if (isset($_SESSION['user_id'])): ?>
-          <li class="nav-item">
-            <span class="nav-link text-white">
-              👋 <?= htmlspecialchars($_SESSION['user_name']) ?>
-            </span>
-          </li>
-          <?php if ($_SESSION['role'] === 'seller'): ?>
-            <li class="nav-item">
-              <a class="nav-link" href="seller/dashboard.php">
-                <i class="bi bi-shop"></i> My Shop
-              </a>
-            </li>
-          <?php elseif ($_SESSION['role'] === 'buyer'): ?>
-            <li class="nav-item">
-              <a class="nav-link" href="buyer/dashboard.php">
-                <i class="bi bi-bag"></i> My Orders
-              </a>
-            </li>
-          <?php elseif (in_array($_SESSION['role'], ['admin','moderator','support','finance'])): ?>
-            <li class="nav-item">
-              <a class="nav-link" href="admin/dashboard.php">
-                <i class="bi bi-shield"></i> Admin
-              </a>
-            </li>
-          <?php endif; ?>
-          <li class="nav-item">
-            <a class="btn btn-sm btn-outline-light" href="auth/logout.php">Logout</a>
-          </li>
-        <?php else: ?>
-          <li class="nav-item">
-            <a class="nav-link" href="auth/login.php">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="btn btn-sm btn-accent text-white" href="auth/register.php">Register</a>
-          </li>
+    <button class="hamburger" onclick="toggleNav()" id="hamburgerBtn">☰</button>
+    <div class="nav-links" id="navMenu">
+      <?php if (isset($_SESSION['user_id'])): ?>
+        <span class="nav-greeting">👋 <?= htmlspecialchars($_SESSION['user_name']) ?></span>
+        <?php if ($_SESSION['role'] === 'seller'): ?>
+          <a href="seller/dashboard.php" class="btn btn-outline-light btn-sm">My Shop</a>
+        <?php elseif ($_SESSION['role'] === 'buyer'): ?>
+          <a href="buyer/dashboard.php" class="btn btn-outline-light btn-sm">My Orders</a>
+        <?php elseif (in_array($_SESSION['role'], ['admin','moderator','support','finance'])): ?>
+          <a href="admin/dashboard.php" class="btn btn-outline-light btn-sm">Admin</a>
         <?php endif; ?>
-      </ul>
+        <a href="auth/logout.php" class="btn btn-outline-light btn-sm">Logout</a>
+      <?php else: ?>
+        <a href="auth/login.php">Login</a>
+        <a href="auth/register.php" class="btn btn-accent btn-sm">Register</a>
+      <?php endif; ?>
     </div>
   </div>
 </nav>
@@ -99,7 +99,7 @@ $listings = $stmt->fetchAll();
       South Africa's #1 electronics marketplace — phones, laptops, gaming & more
     </p>
     <!-- Search Bar -->
-    <form method="GET" action="index.php" class="d-flex justify-content-center gap-2 flex-wrap">
+    <form method="GET" action="index.php" class="d-flex justify-content-center gap-2 flex-wrap" style="margin-bottom: .5rem;">
       <input type="text" name="q" class="form-control" style="max-width:400px; border-radius:8px;"
         placeholder="Search listings..." value="<?= htmlspecialchars($keyword) ?>">
       <select name="cat" class="form-control" style="max-width:180px; border-radius:8px;">
@@ -110,14 +110,28 @@ $listings = $stmt->fetchAll();
           </option>
         <?php endforeach; ?>
       </select>
+      <select name="condition" class="form-control" style="max-width:170px; border-radius:8px;">
+        <option value="">Any Condition</option>
+        <option value="new" <?= $condition === 'new' ? 'selected' : '' ?>>New</option>
+        <option value="like_new" <?= $condition === 'like_new' ? 'selected' : '' ?>>Like New</option>
+        <option value="good" <?= $condition === 'good' ? 'selected' : '' ?>>Good</option>
+        <option value="fair" <?= $condition === 'fair' ? 'selected' : '' ?>>Fair</option>
+        <option value="poor" <?= $condition === 'poor' ? 'selected' : '' ?>>Poor</option>
+      </select>
+      <select name="sort" class="form-control" style="max-width:170px; border-radius:8px;">
+        <option value="newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Newest</option>
+        <option value="price_low" <?= $sort === 'price_low' ? 'selected' : '' ?>>Price: Low to High</option>
+        <option value="price_high" <?= $sort === 'price_high' ? 'selected' : '' ?>>Price: High to Low</option>
+      </select>
       <button class="btn btn-accent text-white px-4">
         <i class="bi bi-search"></i> Search
       </button>
+      <a href="index.php" class="btn btn-outline-light px-4">Clear</a>
     </form>
   </div>
 </section>
 
-<!-- ── CATEGORY PILLS ── -->
+<!-- ── CATEGORY PILLS ── 
 <section class="container my-4">
   <div class="d-flex flex-wrap gap-2">
     <a href="index.php" class="btn btn-sm <?= $cat_id == 0 ? 'btn-primary' : 'btn-outline-primary' ?>">
@@ -131,9 +145,10 @@ $listings = $stmt->fetchAll();
     <?php endforeach; ?>
   </div>
 </section>
+-->
 
 <!-- ── LISTINGS GRID ── -->
-<section class="container mb-5">
+<section class="container mb-5" style="margin-top: 2rem;">
   <h5 class="fw-bold mb-3">
     <?= $keyword ? 'Results for "'.htmlspecialchars($keyword).'"' : '✨ Latest Listings' ?>
     <span class="text-muted fw-normal" style="font-size:.9rem">
@@ -234,6 +249,6 @@ $listings = $stmt->fetchAll();
   
 </footer>
 
-<script src="assets/js/electrotrade.js"></script>
+<script src="assets/js/electrotrade.js?v=20260605"></script>
 </body>
 </html>

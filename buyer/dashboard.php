@@ -132,7 +132,7 @@ if (isset($_GET['remove_wishlist'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Dashboard – Electro Trade</title>
-  <link href="../assets/css/style.css" rel="stylesheet">
+  <link href="../assets/css/style.css?v=20260605" rel="stylesheet">
   <style>
     .order-status {
       display: inline-block;
@@ -314,11 +314,9 @@ if (isset($_GET['remove_wishlist'])) {
 
   <!-- ── SIDEBAR ── -->
   <aside class="sidebar">
-    <span class="sidebar-brand">⚡ Electro Trade</span>
+    <a class="sidebar-brand" href="../index.php">⚡ Electro Trade</a>
     <nav class="sidebar-nav">
-      <a href="dashboard.php" class="active">🏠 Dashboard</a>
-      <a href="dashboard.php#orders">🛒 My Orders</a>
-      <a href="dashboard.php#wishlist">❤️ Wishlist
+      <a href="#wishlist" data-sidebar-link="wishlist">❤️ Wishlist
         <?php if ($s['wishlist_count'] > 0): ?>
           <span style="background:var(--danger); color:#fff; border-radius:50%;
                        padding:0 6px; font-size:.75rem; margin-left:auto;">
@@ -326,7 +324,7 @@ if (isset($_GET['remove_wishlist'])) {
           </span>
         <?php endif; ?>
       </a>
-      <a href="dashboard.php#profile">👤 My Profile</a>
+      <a href="#profile" data-sidebar-link="profile">👤 My Profile</a>
       <a href="../index.php">🌐 Browse Listings</a>
       <a href="../auth/logout.php" style="color:rgb(255, 255, 255);">
         🚪 Logout
@@ -390,19 +388,19 @@ if (isset($_GET['remove_wishlist'])) {
 
     <!-- ── TABS ── -->
     <div class="tab-buttons">
-      <button class="tab-btn active" onclick="showTab('orders', this)">
+      <button class="tab-btn active" data-tab="orders" onclick="showTab('orders', this)">
         🛒 My Orders
       </button>
-      <button class="tab-btn" onclick="showTab('wishlist', this)">
+      <button class="tab-btn" data-tab="wishlist" onclick="showTab('wishlist', this)">
         ❤️ Wishlist (<?= $s['wishlist_count'] ?>)
       </button>
-      <button class="tab-btn" onclick="showTab('profile', this)">
+      <button class="tab-btn" data-tab="profile" onclick="showTab('profile', this)">
         👤 My Profile
       </button>
     </div>
 
     <!-- ── TAB: ORDERS ── -->
-    <div id="tab-orders" class="tab-content active">
+    <div id="orders" data-tab-panel="orders" class="tab-content active">
       <?php if (empty($myOrders)): ?>
         <div class="sz-card text-center" style="padding:3rem;">
           <p style="font-size:2.5rem;">🛒</p>
@@ -486,7 +484,7 @@ if (isset($_GET['remove_wishlist'])) {
     </div>
 
     <!-- ── TAB: WISHLIST ── -->
-    <div id="tab-wishlist" class="tab-content">
+    <div id="wishlist" data-tab-panel="wishlist" class="tab-content">
       <?php if (empty($myWishlist)): ?>
         <div class="sz-card text-center" style="padding:3rem;">
           <p style="font-size:2.5rem;">❤️</p>
@@ -527,7 +525,7 @@ if (isset($_GET['remove_wishlist'])) {
     </div>
 
     <!-- ── TAB: PROFILE ── -->
-    <div id="tab-profile" class="tab-content">
+    <div id="profile" data-tab-panel="profile" class="tab-content">
       <div class="row">
         <div class="col-12 col-4">
           <div class="profile-card">
@@ -637,12 +635,38 @@ if (isset($_GET['remove_wishlist'])) {
 </div>
 
 <script>
+  function setActiveSidebar(tab) {
+    document.querySelectorAll('[data-sidebar-link]').forEach(link => {
+      link.classList.toggle('active', link.getAttribute('data-sidebar-link') === tab);
+    });
+  }
+
   function showTab(name, btn) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-    btn.classList.add('active');
+
+    const panel = document.getElementById(name);
+    if (panel) panel.classList.add('active');
+
+    const targetBtn = btn || document.querySelector('.tab-btn[data-tab="' + name + '"]');
+    if (targetBtn) targetBtn.classList.add('active');
+
+    setActiveSidebar(name);
+
+    if (window.location.hash !== '#' + name) {
+      history.replaceState(null, '', '#' + name);
+    }
   }
+
+  function activateFromHash() {
+    const hash = (window.location.hash || '#orders').replace('#', '');
+    const valid = ['orders', 'wishlist', 'profile'];
+    const tab = valid.includes(hash) ? hash : 'orders';
+    showTab(tab);
+  }
+
+  window.addEventListener('DOMContentLoaded', activateFromHash);
+  window.addEventListener('hashchange', activateFromHash);
 </script>
 </body>
 </html>

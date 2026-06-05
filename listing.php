@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= htmlspecialchars($listing['title']) ?> – Electro Trade</title>
-  <link href="assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/style.css?v=20260605" rel="stylesheet">
   <style>
     /* ── Listing detail specific styles ── */
     .listing-detail { padding: 2rem 0; }
@@ -103,7 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
     .img-main {
       width: 100%;
       height: 380px;
-      object-fit: cover;
+      object-fit: contain;
+      object-position: center;
+      background: #f7f7f7;
       border-radius: var(--radius);
       cursor: pointer;
     }
@@ -118,7 +120,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
     .img-thumbs img {
       width: 75px;
       height: 75px;
-      object-fit: cover;
+      object-fit: contain;
+      object-position: center;
+      background: #f7f7f7;
       border-radius: 8px;
       cursor: pointer;
       border: 2px solid transparent;
@@ -218,9 +222,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
       <?php if (isset($_SESSION['user_id'])): ?>
         <span class="nav-greeting">👋 <?= htmlspecialchars($_SESSION['user_name']) ?></span>
         <?php if ($_SESSION['role'] === 'seller'): ?>
-          <a href="seller/dashboard.php">My Shop</a>
+          <a href="seller/dashboard.php" class="btn btn-outline-light btn-sm">My Shop</a>
         <?php elseif ($_SESSION['role'] === 'buyer'): ?>
-          <a href="buyer/dashboard.php">My Orders</a>
+          <a href="buyer/dashboard.php" class="btn btn-outline-light btn-sm">My Orders</a>
         <?php endif; ?>
         <a href="auth/logout.php" class="btn btn-outline-light btn-sm">Logout</a>
       <?php else: ?>
@@ -491,7 +495,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['send_message'])) {
   </div>
 </footer>
 
-<script src="assets/js/electrotrade.js"></script>
+<script src="assets/js/electrotrade.js?v=20260605"></script>
 <script>
   // Switch main image on thumbnail click
   function switchImage(thumb, src) {

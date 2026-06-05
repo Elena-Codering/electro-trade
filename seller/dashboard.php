@@ -64,7 +64,7 @@ $recentOrders = $orders->fetchAll();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seller Dashboard – Electro Trade</title>
-  <link href="../assets/css/style.css" rel="stylesheet">
+  <link href="../assets/css/style.css?v=20260605" rel="stylesheet">
   <style>
     .status-active   { color: var(--success); font-weight:600; }
     .status-pending  { color: var(--warning); font-weight:600; }
@@ -130,7 +130,7 @@ $recentOrders = $orders->fetchAll();
 
   <!-- ── SIDEBAR ── -->
   <aside class="sidebar">
-    <span class="sidebar-brand">⚡ Electro Trade</span>
+    <a class="sidebar-brand" href="../index.php">⚡ Electro Trade</a>
     <nav class="sidebar-nav">
       <a href="dashboard.php" class="active">🏠 Dashboard</a>
       <a href="add-listing.php">➕ Add Listing</a>
@@ -228,7 +228,7 @@ $recentOrders = $orders->fetchAll();
               <?php foreach ($myListings as $l): ?>
                 <tr>
                   <td>
-                    <img src="<?= htmlspecialchars($l['image_url'] ?? '../assets/img/placeholder.png') ?>"
+                    <img src="../<?= htmlspecialchars($l['image_url'] ?? 'assets/img/placeholder.png') ?>"
                          class="listing-thumb" alt="">
                   </td>
                   <td style="font-weight:500; max-width:200px;">
