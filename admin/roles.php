@@ -321,25 +321,6 @@ $roleInfo = [
                 </span>
               </div>
             </div>
-            <!-- Change role inline -->
-            <?php if ($s['user_id'] !== $_SESSION['user_id']): ?>
-              <form method="POST">
-                <input type="hidden" name="user_id" value="<?= $s['user_id'] ?>">
-                <select name="new_role" class="form-control"
-                        style="padding:.3rem .5rem; font-size:.8rem; 
-                               width:auto; margin-bottom:.4rem;">
-                  <?php foreach (['buyer','seller','admin','moderator','support','finance'] as $r): ?>
-                    <option value="<?= $r ?>" <?= $s['role'] === $r ? 'selected' : '' ?>>
-                      <?= ucfirst($r) ?>
-                    </option>
-                  <?php endforeach; ?>
-                </select>
-                <button type="submit" name="update_role"
-                        class="btn btn-primary btn-sm w-100">
-                  Save
-                </button>
-              </form>
-            <?php endif; ?>
           </div>
         <?php endforeach; ?>
       </div>
