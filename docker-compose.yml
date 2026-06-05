@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: php_web
     ports:
-      - "8080:80"
+      - "8558:80"
     volumes:
       - ./:/var/www/html
     env_file:
@@ -48,6 +48,21 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "8668:80"
+    depends_on:
+      - db
+    networks:
+      - appnet
     restart: unless-stopped
 
 networks:
