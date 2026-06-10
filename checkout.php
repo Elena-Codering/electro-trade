@@ -98,15 +98,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Mark listing as sold
         // Reduce quantity, mark sold if quantity reaches 0
+        // Get current quantity first
+        $qtyCheck = $pdo->prepare('
+            SELECT quantity FROM listings WHERE listing_id = :id
+        ');
+        $qtyCheck->execute([':id' => $listing_id]);
+        $currentQty = (int)$qtyCheck->fetchColumn();
+
+        // Calculate new quantity safely
+        $newQty = max(0, $currentQty - $qty);
+        $newStatus = $newQty <= 0 ? 'sold' : 'active';
+
+        // Update listing quantity and status
         $pdo->prepare('
             UPDATE listings 
-            SET quantity = GREATEST(quantity - :qty, 0),
-                status = CASE WHEN quantity - :qty2 <= 0 THEN "sold" ELSE status END
+            SET quantity = :newqty,
+                status   = :status
             WHERE listing_id = :id
         ')->execute([
-            ':qty'  => $qty,
-            ':qty2' => $qty,
-            ':id'   => $listing_id
+            ':newqty' => $newQty,
+            ':status' => $newStatus,
+            ':id'     => $listing_id
         ]);
 
         $success = true;
