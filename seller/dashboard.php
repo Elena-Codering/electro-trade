@@ -282,7 +282,6 @@ $recentOrders = $orders->fetchAll();
                 <th>Amount</th>
                 <th>Status</th>
                 <th>Date</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -300,10 +299,6 @@ $recentOrders = $orders->fetchAll();
                     </span>
                   </td>
                   <td><?= date('d M Y', strtotime($o['created_at'])) ?></td>
-                  <td>
-                    <a href="order-detail.php?id=<?= $o['order_id'] ?>"
-                       class="btn btn-outline btn-sm">View</a>
-                  </td>
                 </tr>
               <?php endforeach; ?>
             </tbody>
